@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="site-title">Paree — Studio</title>
+  <meta name="description" content="Virtual studio space portfolio." />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'studio-cream': '#e7e1db',
+            'studio-ink': '#2b2620',
+            'studio-muted': '#7a6f60',
+            'studio-line': '#ddd0ba',
+            'studio-bg': '#faf9f5'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Studio Custom CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Preload Essential Assets -->
+  <link rel="preload" as="image" href="assets/hero/cover.webp" />
+  <link rel="preload" as="image" href="assets/hero/dark-cover.webp" />
+  <link rel="preload" as="image" href="assets/hero/home.webp" />
+  <link rel="preload" as="image" href="assets/contact/plant1.png" />
+  <link rel="preload" as="image" href="assets/contact/watering-can.png" />
+</head>
+<body class="bg-[var(--color-studio-cream)] text-[var(--color-studio-ink)] selection:bg-[#2b2620] selection:text-white">
+
+  <!-- ==================== FIXED TOP NAVIGATION ==================== -->
+  <header class="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-center justify-between px-6 py-6 md:px-12 md:py-8 font-pixel select-none">
+    <!-- Home Stamp Link -->
+    <a href="#home" class="pointer-events-auto block transition-opacity duration-200 hover:opacity-60" aria-label="Home">
+      <img id="nav-stamp-home" src="assets/hero/home.webp" alt="Studio Home" class="w-8 md:w-11 select-none" draggable="false" />
+    </a>
+
+    <!-- Navigation Links & CMS Controls -->
+    <div class="pointer-events-auto flex items-center gap-4 md:gap-8">
+      <nav aria-label="Studio sections" class="flex items-center gap-6 md:gap-9 text-base md:text-xl">
+        <!-- Projects Link -->
+        <a href="#projects" class="relative group whitespace-nowrap transition-opacity hover:opacity-60">
+          <span class="tracking-widest">projects</span>
+          <img id="nav-stamp-projects" src="assets/hero/nav-projects.webp" alt="" class="pointer-events-none absolute -bottom-2 left-0 w-full select-none opacity-80 group-hover:opacity-100 transition-opacity" draggable="false" />
+        </a>
+
+        <!-- About Link -->
+        <a href="#about" class="relative group whitespace-nowrap transition-opacity hover:opacity-60">
+          <span class="tracking-widest">about</span>
+          <img id="nav-stamp-about" src="assets/hero/nav-about.webp" alt="" class="pointer-events-none absolute -bottom-1 -left-1 w-[120%] max-w-none select-none opacity-80 group-hover:opacity-100 transition-opacity" draggable="false" />
+        </a>
+
+        <!-- Contact Link -->
+        <a href="#contact" class="relative group whitespace-nowrap transition-opacity hover:opacity-60">
+          <span class="tracking-widest">contact</span>
+          <img id="nav-stamp-contact" src="assets/hero/nav-contact.webp" alt="" class="pointer-events-none absolute -bottom-2 -left-1 w-full select-none opacity-80 group-hover:opacity-100 transition-opacity" draggable="false" />
+        </a>
+      </nav>
+
+      <!-- Sun / Moon Dark Mode Toggle Button -->
+      <button type="button" id="sun-moon-toggle-btn" title="Toggle Studio Lights (Dark Mode)" class="p-1.5 hover:opacity-80 transition-transform active:scale-90">
+        <img id="sun-moon-icon" src="assets/hero/sun.webp" alt="Toggle Day/Night" class="w-6 md:w-8 select-none" draggable="false" />
+      </button>
+
+      <!-- Direct Inline Text Deletion / Edit Mode Toggle -->
+      <button type="button" id="btn-toggle-text-edit-mode" onclick="window.studioApp.toggleTextEditMode()" title="Toggle On-Screen Text Deletion & Editing Mode" class="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-white text-[#2b2620] hover:bg-[#2b2620] hover:text-white border border-[#2b2620]/25 rounded-sm shadow-sm transition-all active:scale-95 font-pixel">
+        <span>✂️</span>
+        <span id="btn-text-edit-label" class="hidden sm:inline">delete / edit text</span>
+      </button>
+
+      <!-- Studio Quick Fonts & Colors Customizer -->
+      <button type="button" id="open-theme-btn" title="Customize Fonts & Colors" class="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-[var(--color-studio-cream)] text-[var(--color-studio-ink)] hover:opacity-80 border border-[var(--color-studio-line)] rounded-sm shadow-sm transition-transform active:scale-95">
+        <span>🎨</span>
+        <span class="hidden sm:inline">fonts & colors</span>
+      </button>
+
+      <!-- Studio CMS Edit Button -->
+      <button type="button" id="open-admin-btn" title="Edit Portfolio (Ctrl+E)" class="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-[var(--color-studio-ink)] text-[var(--color-studio-cream)] hover:opacity-90 rounded-sm shadow transition-transform active:scale-95">
+        <span>✎</span>
+        <span class="hidden sm:inline">edit studio</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <main class="w-full">
+
+    <!-- ==================== SECTION 1: HERO / START SCREEN ==================== -->
+    <section id="home" class="relative h-screen w-full flex flex-col items-center justify-center bg-[var(--color-hero-bg)] px-6 font-pixel overflow-hidden transition-colors duration-400">
+      
+      <!-- Floating Interactive Cursor Follower Prompt -->
+      <div id="click-me-badge" class="fixed top-0 left-0 z-40 select-none pointer-events-none opacity-0 transition-opacity font-pixel text-xs md:text-sm px-3.5 py-1.5 bg-black/90 text-white rounded-full border border-white/20 shadow-2xl flex items-center gap-1.5 backdrop-blur-sm">
+        <span>✨</span>
+        <span id="click-me-text">click here</span>
+      </div>
+
+      <div class="flex flex-col items-center justify-center transform -translate-y-2 max-w-full">
+        <!-- 1. The Studio Desk Illustration with Interactive Overlays (First) -->
+        <div id="hero-desk-container" class="relative max-w-[88vw] md:max-w-[700px] cursor-pointer group" title="Click anywhere on the desk to switch lights!">
+          <!-- Main Desk Image -->
+          <img id="hero-desk-img" 
+               src="assets/hero/cover.webp" 
+               alt="Studio Desk in motion" 
+               class="block w-full select-none transition-transform duration-300 group-hover:scale-[1.01]" 
+               draggable="false" />
+
+          <!-- Dark Mode Creature Overlays (Rendered when lights are off) -->
+          <div id="hero-creatures-container" class="absolute inset-0 pointer-events-none hidden">
+            <!-- Injected by app.js -->
+          </div>
+
+          <!-- Interactive Element 1: Live Ticking Desk Clock -->
+          <div id="hero-live-clock" class="absolute top-[32%] left-[45.5%] px-1.5 py-0.5 bg-black/85 text-[#38ef7d] font-mono text-[9px] md:text-[11px] rounded select-none tracking-widest border border-white/10 shadow-lg pointer-events-none">
+            <span id="clock-time-display">12:00:00</span>
+          </div>
+
+          <!-- Interactive Element 2: Steaming Coffee Mug -->
+          <div id="hero-coffee-steam" class="absolute top-[52%] left-[39.5%] pointer-events-none">
+            <div class="steam-particle" style="left: 0; animation-delay: 0s;"></div>
+            <div class="steam-particle" style="left: 4px; animation-delay: 0.7s;"></div>
+            <div class="steam-particle" style="left: 8px; animation-delay: 1.4s;"></div>
+          </div>
+        </div>
+
+        <!-- 2. Text at the bottom as requested -->
+        <h1 id="hero-headline" class="select-none font-normal text-center text-lg sm:text-2xl md:text-3xl tracking-wide transition-colors duration-300 mt-6 mb-2">
+          im paree. welcome to my studio.
+        </h1>
+
+        <!-- 3. Click Cue / Light Switch Hint -->
+        <button type="button" onclick="window.studioApp.toggleDarkMode()" class="mt-2 flex items-center gap-2 text-xs font-pixel opacity-70 hover:opacity-100 transition-opacity">
+          <span>💡</span>
+          <span>(click desk to switch lights)</span>
+        </button>
+      </div>
+
+      <!-- Bouncing Scroll Cue -->
+      <a href="#projects" aria-label="Scroll to projects" class="absolute bottom-8 left-1/2 -translate-x-1/2 transition-opacity duration-200 hover:opacity-60 animate-hero-bob">
+        <img id="hero-scroll-cue-img" src="assets/hero/scroll-cue.webp" alt="" class="block w-8 md:w-10 select-none" draggable="false" />
+      </a>
+    </section>
+
+    <!-- ==================== SECTION 2: PROJECTS GALLERY ==================== -->
+    <section id="projects" class="relative min-h-screen w-full flex flex-col items-center justify-center bg-[var(--color-studio-bg)] px-6 py-20 md:px-16 md:py-28 overflow-x-hidden transition-colors duration-400">
+      
+      <!-- Work Layout Controls Bar -->
+      <div class="w-full max-w-5xl mb-12 flex flex-wrap items-center justify-between gap-4 font-pixel text-xs border-b border-[var(--color-studio-line)] pb-4">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="opacity-60 uppercase tracking-wider">layout:</span>
+          <button type="button" class="layout-toggle-btn px-2.5 py-1 rounded border border-gray-300 transition-colors" data-mode="scattered" onclick="window.studioApp.setLayoutMode('scattered')">
+            🗂️ scattered
+          </button>
+          <button type="button" class="layout-toggle-btn px-2.5 py-1 rounded border border-gray-300 transition-colors" data-mode="grid" onclick="window.studioApp.setLayoutMode('grid')">
+            ⊞ grid
+          </button>
+          <button type="button" class="layout-toggle-btn px-2.5 py-1 rounded border border-gray-300 transition-colors" data-mode="masonry" onclick="window.studioApp.setLayoutMode('masonry')">
+            🧱 masonry
+          </button>
+          <button type="button" class="layout-toggle-btn px-2.5 py-1 rounded border border-gray-300 transition-colors" data-mode="editorial" onclick="window.studioApp.setLayoutMode('editorial')">
+            📰 editorial
+          </button>
+
+          <span class="opacity-30 mx-1">|</span>
+
+          <!-- 1-Click Category Text Toggle Button -->
+          <button type="button" id="btn-toggle-categories-text" onclick="window.studioApp.toggleCategoriesVisibility()" class="px-2.5 py-1 rounded border border-gray-300 hover:border-black transition-colors flex items-center gap-1.5" title="Click to show or hide category text (e.g. Editorial Design, Fashion Film)">
+            <span>🏷️</span>
+            <span>categories text:</span>
+            <span id="label-categories-visibility" class="font-bold underline text-emerald-800">shown</span>
+          </button>
+        </div>
+
+        <button type="button" onclick="window.studioAdmin.open('layout')" class="text-xs text-[var(--color-studio-muted)] hover:text-[var(--color-studio-ink)] flex items-center gap-1 underline">
+          <span>⚙ customize work layout</span>
+        </button>
+      </div>
+
+      <!-- Projects Grid Container -->
+      <div id="projects-grid" class="mx-auto w-full transition-all duration-300">
+        <!-- Injected dynamically by app.js -->
+      </div>
+
+      <!-- Scroll for more cue -->
+      <div class="mt-16 flex flex-col items-center">
+        <a href="#about" aria-label="Scroll to about" class="flex flex-col items-center gap-2 transition-opacity duration-200 hover:opacity-60 animate-hero-bob">
+          <span class="font-pixel text-sm">scroll to about</span>
+          <img src="assets/hero/scroll-cue.webp" alt="" class="block w-7 select-none" draggable="false" />
+        </a>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 3: ABOUT ==================== -->
+    <section id="about" class="relative min-h-screen w-full flex flex-col items-center justify-center bg-[var(--color-hero-bg)] px-6 py-20 md:px-16 md:py-28 transition-colors duration-400">
+      <div class="mx-auto flex w-full max-w-5xl flex-col items-center gap-10 md:flex-row md:items-center md:justify-center md:gap-16">
+        
+        <!-- Polaroid Image Frame with Single Washi Tape & Parallax Tilt Motion -->
+        <div id="polaroid-wrapper" class="relative w-[280px] sm:w-[330px] md:w-[390px] shrink-0 cursor-pointer select-none">
+          
+          <!-- Single Frosted Washi Tape across the top -->
+          <div class="polaroid-tape polaroid-tape-top" aria-hidden="true"></div>
+
+          <!-- Realistic Polaroid Frame -->
+          <div class="polaroid-inner polaroid-card-realistic relative p-3.5 sm:p-4 pb-12 sm:pb-14 rounded-[2px]">
+            
+            <!-- Shutter camera flash layer -->
+            <div id="polaroid-flash" class="absolute inset-0 bg-white pointer-events-none opacity-0 z-30 transition-opacity duration-300"></div>
+
+            <!-- Photo aperture -->
+            <div class="relative w-full aspect-[4/5] sm:aspect-square overflow-hidden bg-[#1c1815] rounded-[1px] shadow-inner border border-black/10">
+              <img id="about-polaroid-img" 
+                   src="assets/paree/about/paree-portrait.jpeg" 
+                   alt="Paree Rastogi - Portrait" 
+                   class="block w-full h-full object-cover object-top select-none transition-all duration-500 hover:scale-105" 
+                   draggable="false" />
+
+              <!-- Subtle photo glossy sheen -->
+              <div class="absolute inset-0 pointer-events-none bg-gradient-to-tr from-transparent via-white/5 to-white/10 z-15"></div>
+            </div>
+
+            <!-- Polaroid Chin: Studio Handwritten Caption -->
+            <div class="mt-3.5 sm:mt-4 flex items-center justify-between px-1 select-none">
+              <span id="polaroid-caption" class="font-pixel text-xs sm:text-sm tracking-wide lowercase text-[#2b2620]">
+                paree.
+              </span>
+              <span id="polaroid-edition-badge" class="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-[#7a6f60]/80">
+                #01
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bio Paragraphs -->
+        <div class="flex w-full max-w-xl flex-col justify-between">
+          <div id="about-bio-container" class="space-y-5 text-[14px] leading-relaxed font-sans">
+            <!-- Injected dynamically by app.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll to contact cue -->
+      <a href="#contact" aria-label="Scroll to contact" class="mt-14 flex flex-col items-center transition-opacity duration-200 hover:opacity-60 animate-hero-bob">
+        <img src="assets/hero/scroll-cue.webp" alt="" class="block w-7 select-none" draggable="false" />
+      </a>
+    </section>
+
+    <!-- ==================== SECTION 4: CONTACT & PLANT GAME ==================== -->
+    <section id="contact" class="relative min-h-screen w-full flex flex-col items-center justify-center bg-[var(--color-hero-bg)] px-6 py-20 md:px-16 md:py-28 select-none transition-colors duration-400">
+      <div class="mx-auto flex w-full max-w-4xl flex-col items-center">
+        <!-- Heading -->
+        <h2 id="plant-status-text" class="text-xl md:text-2xl lowercase font-pixel text-center transition-colors">
+          water my plant! (1/4)
+        </h2>
+
+        <!-- Plant & Watering Can Interactive Area -->
+        <div class="relative mt-6 flex w-full items-end justify-center gap-4 md:gap-10">
+          <img src="assets/contact/arrow-cropped.png" alt="" aria-hidden="true" draggable="false" 
+               class="pointer-events-none absolute z-10 hidden w-[140px] md:block" 
+               style="top: -24px; left: calc(50% + 90px);" />
+
+          <div id="plant-container" class="relative w-[220px] md:w-[320px] cursor-pointer" title="Click or drag watering can here to water!">
+            <img id="plant-stage-1" src="assets/contact/plant1.png" alt="Plant Stage 1" class="block w-full transition-all duration-500 relative" draggable="false" />
+            <img id="plant-stage-2" src="assets/contact/plant2.png" alt="Plant Stage 2" class="block w-full absolute inset-0 opacity-0 transition-all duration-500" draggable="false" />
+            <img id="plant-stage-3" src="assets/contact/plant3.png" alt="Plant Stage 3" class="block w-full absolute inset-0 opacity-0 transition-all duration-500" draggable="false" />
+            <img id="plant-stage-4" src="assets/contact/plant4.png" alt="Plant Stage 4" class="block w-full absolute inset-0 opacity-0 transition-all duration-500" draggable="false" />
+          </div>
+
+          <div id="watering-can-container" role="button" tabindex="0" aria-label="Drag the watering can onto the plant to water it" 
+               class="relative flex flex-col items-center touch-none select-none cursor-grab active:cursor-grabbing">
+            <img id="watering-can-img" src="assets/contact/watering-can.png" alt="Watering Can" class="block w-[100px] md:w-[140px] select-none" draggable="false" />
+            <span id="pick-me-up-tooltip" class="pointer-events-none absolute top-[70%] left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] md:text-[13px] lowercase text-[var(--color-studio-muted)] font-pixel transition-opacity">
+              pick me up
+            </span>
+          </div>
+        </div>
+
+        <!-- Closing Copy -->
+        <div class="mt-10 flex w-fit max-w-xl flex-col items-center text-center">
+          <p id="contact-closing-note" class="text-sm md:text-base leading-relaxed font-sans">
+            I’m always looking to grow. Thanks for exploring my little studio. If you liked what you found here and think we could make something together, I’d love to hear from you.
+          </p>
+
+          <!-- Modular Contact Links (Freely editable / removable in CMS!) -->
+          <ul id="contact-links-list" class="mt-6 flex w-full flex-wrap items-center justify-center gap-x-8 gap-y-3 font-pixel">
+            <!-- Injected dynamically from contactLinks -->
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== FULLSCREEN CASE STUDY VIEW ==================== -->
+  <div id="case-study-view" class="fixed inset-0 z-50 overflow-y-auto bg-[var(--color-studio-bg)] hidden selection:bg-black selection:text-white">
+    <div id="case-study-content" class="w-full min-h-screen">
+      <!-- Injected dynamically by app.js -->
+    </div>
+  </div>
+
+  <!-- ==================== CASE STUDY VISUAL EDITOR MODAL ==================== -->
+  <div id="case-study-editor-modal" class="fixed inset-0 z-[60] bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-3 md:p-6">
+    <div class="bg-[#faf9f5] border border-[#2b2620] w-full max-w-4xl max-h-[94vh] rounded-sm shadow-2xl flex flex-col overflow-hidden text-[#2b2620]">
+      <!-- Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-[#e2ddd5] bg-white">
+        <div class="flex items-center gap-3">
+          <span class="text-xl">✎</span>
+          <div>
+            <h2 id="cs-editor-modal-title" class="font-bold text-base text-[#2b2620]">Edit Case Study</h2>
+            <p class="text-xs text-gray-500">Edit project story, media chapters, hero slideshow, video & reflections</p>
+          </div>
+        </div>
+        <button type="button" id="close-cs-editor-btn" class="p-1 text-gray-400 hover:text-black text-xl">✕</button>
+      </div>
+
+      <!-- Form Body -->
+      <div class="flex-1 overflow-y-auto p-6">
+        <form id="case-study-editor-form" class="space-y-6">
+          <input type="hidden" id="cs-project-id" />
+
+          <!-- Section 1: Basic Metadata -->
+          <div class="bg-white p-5 border border-[#e2ddd5] rounded space-y-4">
+            <h3 class="font-bold text-xs uppercase tracking-wider text-gray-700">Project Metadata</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Project Title</label>
+                <input type="text" id="cs-title" required class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:border-black outline-none" />
+              </div>
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block text-xs font-semibold text-gray-700">Category (Work Page Tag)</label>
+                  <button type="button" onclick="document.getElementById('cs-category').value=''" class="text-[11px] text-red-500 hover:text-red-700 underline font-normal">✕ Delete Category</button>
+                </div>
+                <input type="text" id="cs-category" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:border-black outline-none" placeholder="(Leave blank to remove)" />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block text-xs font-semibold text-gray-700">Disciplines / Subtitle (Hero Subtitle)</label>
+                  <button type="button" onclick="document.getElementById('cs-type').value=''" class="text-[11px] text-red-500 hover:text-red-700 underline font-normal">✕ Delete Subtitle</button>
+                </div>
+                <input type="text" id="cs-type" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:border-black outline-none" placeholder="e.g. Editorial Layout · Writing (Leave blank to remove)" />
+              </div>
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block text-xs font-semibold text-gray-700">Hover Ribbon Badge</label>
+                  <button type="button" onclick="document.getElementById('cs-badge').value=''" class="text-[11px] text-red-500 hover:text-red-700 underline font-normal">✕ Delete Badge</button>
+                </div>
+                <input type="text" id="cs-badge" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:border-black outline-none" placeholder="e.g. featured publication (Leave blank to remove)" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Cover Image & Video -->
+          <div class="bg-white p-5 border border-[#e2ddd5] rounded space-y-4">
+            <h3 class="font-bold text-xs uppercase tracking-wider text-gray-700">Cover & Media Settings</h3>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Project Cover Image (Used on Work Pinboard)</label>
+              <div class="flex items-center gap-4">
+                <img id="cs-cover-preview" src="assets/hero/cover.webp" class="w-20 h-20 object-cover rounded border border-gray-300 bg-gray-50 shrink-0" />
+                <div class="space-y-2 flex-1">
+                  <input type="file" id="cs-cover-file" accept="image/*" class="text-xs text-gray-600 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-[#2b2620] file:text-white file:cursor-pointer hover:file:opacity-80" />
+                  <input type="text" id="cs-cover-url" class="w-full px-2.5 py-1 text-xs border border-gray-300 rounded focus:border-black outline-none" placeholder="Or enter image URL / path" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Video Player (e.g. Suitcase Fashion Film) -->
+            <div class="pt-3 border-t border-gray-100">
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Project Video / Film URL (Optional, for fashion film or reel)</label>
+              <input type="text" id="cs-video-url" class="w-full px-3 py-2 border border-gray-300 rounded text-xs focus:border-black outline-none" placeholder="e.g. assets/paree/film/suitcase.mp4 or https://..." />
+              <p class="text-[11px] text-gray-500 mt-1">If present, this video will be displayed in the case study with native HTML5 player.</p>
+            </div>
+          </div>
+
+          <!-- Section 3: Hero Carousel Images -->
+          <div class="bg-white p-5 border border-[#e2ddd5] rounded space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="font-bold text-xs uppercase tracking-wider text-gray-700">Hero Slideshow Carousel</h3>
+                <p class="text-xs text-gray-500">The full-bleed slideshow at the top of the case study.</p>
+              </div>
+              <button type="button" id="cs-add-hero-slide-btn" class="px-3 py-1 bg-[#2b2620] text-white text-xs rounded hover:opacity-90">+ Add Hero Slide</button>
+            </div>
+            <div id="cs-hero-slides-list" class="space-y-3">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Section 4: Narrative Summary & Intro -->
+          <div class="bg-white p-5 border border-[#e2ddd5] rounded space-y-4">
+            <h3 class="font-bold text-xs uppercase tracking-wider text-gray-700">Premise & Introduction</h3>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Project Summary / Premise Narrative</label>
+              <textarea id="cs-summary" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:border-black outline-none leading-relaxed"></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Lead Banner / Gallery Image (Optional)</label>
+              <input type="text" id="cs-gallery-image" class="w-full px-3 py-2 border border-gray-300 rounded text-xs focus:border-black outline-none" placeholder="e.g. assets/paree/magazine/mag-4.jpeg" />
+            </div>
+          </div>
+
+          <!-- Section 5: Story Chapters & Visual Spreads -->
+          <div class="bg-white p-5 border border-[#e2ddd5] rounded space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="font-bold text-xs uppercase tracking-wider text-gray-700">Story Chapters & Visual Spreads</h3>
+                <p class="text-xs text-gray-500">Add detailed chapters with text, layouts, and high-res imagery.</p>
+              </div>
+              <button type="button" id="cs-add-chapter-btn" class="px-3 py-1 bg-[#2b2620] text-white text-xs rounded hover:opacity-90">+ Add Chapter</button>
+            </div>
+            <div id="cs-chapters-list" class="space-y-4">
+              <!-- Dynamically populated chapters -->
+            </div>
+          </div>
+
+          <!-- Section 6: Closing Reflection -->
+          <div class="bg-white p-5 border border-[#e2ddd5] rounded space-y-4">
+            <h3 class="font-bold text-xs uppercase tracking-wider text-gray-700">Closing Reflection Quote</h3>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Reflection Quote</label>
+              <input type="text" id="cs-reflection" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:border-black outline-none" placeholder="e.g. Nostalgia and today's culture belong on the same page." />
+            </div>
+          </div>
+
+          <!-- Footer Actions -->
+          <div class="flex items-center justify-end gap-3 pt-4 border-t border-[#e2ddd5]">
+            <button type="button" id="cs-cancel-btn" class="px-4 py-2 border border-gray-300 text-xs rounded hover:bg-gray-50">Cancel</button>
+            <button type="submit" class="px-6 py-2 bg-[#2b2620] text-white font-medium text-xs rounded hover:opacity-90">Save Case Study Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== STUDIO CMS / ADMIN DRAWER ==================== -->
+  <div id="admin-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-[#faf9f5] border border-[#2b2620] w-full max-w-4xl max-h-[92vh] rounded-sm shadow-2xl flex flex-col overflow-hidden text-[#2b2620]">
+      <!-- Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-[#e2ddd5] bg-white">
+        <div class="flex items-center gap-3">
+          <span class="text-xl">✎</span>
+          <div>
+            <h2 class="font-bold text-base text-[#2b2620]">Studio Portfolio Manager</h2>
+            <p class="text-xs text-gray-500">Edit content, upload new projects, customize layout, contacts & export</p>
+          </div>
+        </div>
+        <button type="button" id="close-admin-btn" class="p-1 text-gray-400 hover:text-black text-xl">✕</button>
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="flex border-b border-[#e2ddd5] bg-[#f2eee9] px-6 gap-6 text-xs font-semibold uppercase tracking-wider overflow-x-auto">
+        <button class="admin-tab-btn py-3 border-b-2 border-black text-black font-bold whitespace-nowrap" data-tab="projects">Projects</button>
+        <button class="admin-tab-btn py-3 border-b-2 border-transparent text-gray-500 hover:text-black whitespace-nowrap" data-tab="theme">🎨 Fonts & Colors</button>
+        <button class="admin-tab-btn py-3 border-b-2 border-transparent text-gray-500 hover:text-black whitespace-nowrap" data-tab="layout">Work Layout</button>
+        <button class="admin-tab-btn py-3 border-b-2 border-transparent text-gray-500 hover:text-black whitespace-nowrap" data-tab="hero">Start Screen & Dark Mode</button>
+        <button class="admin-tab-btn py-3 border-b-2 border-transparent text-gray-500 hover:text-black whitespace-nowrap" data-tab="profile">Profile & Bio</button>
+        <button class="admin-tab-btn py-3 border-b-2 border-transparent text-gray-500 hover:text-black whitespace-nowrap" data-tab="contacts">Contacts & Links</button>
+        <button class="admin-tab-btn py-3 border-b-2 border-transparent text-gray-500 hover:text-black whitespace-nowrap" data-tab="backup">Backup & Publish</button>
+      </div>
+
+      <!-- Body / Tab Panes -->
+      <div class="flex-1 overflow-y-auto p-6">
+        
+        <!-- Tab 1: Projects -->
+        <div id="tab-projects" class="admin-tab-content space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-semibold text-sm text-[#2b2620]">Your Projects</h3>
+            <button type="button" id="admin-new-project-btn" class="px-4 py-1.5 bg-[#2b2620] text-white text-xs font-medium rounded hover:opacity-90">
+              + Upload New Project
+            </button>
+          </div>
+          <div id="admin-project-form-container"></div>
+          <div id="admin-project-list" class="space-y-2"></div>
+        </div>
+
+        <!-- Tab 2: Work Layout Settings -->
+        <div id="tab-layout" class="admin-tab-content hidden space-y-5">
+          <form id="admin-layout-form" class="bg-white p-5 border border-[#e2ddd5] rounded space-y-4">
+            <h3 class="font-bold text-sm text-[#2b2620]">Work Page Layout Settings</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1">Layout Mode</label>
+                <select id="layout-mode-select" class="w-full px-3 py-2 border border-gray-300 rounded text-sm bg-white">
+                  <option value="scattered">Scattered (Studio Pinboard with organic offsets)</option>
+                  <option value="grid">Clean Minimal Grid (Symmetrical columns)</option>
+                  <option value="masonry">Masonry Flow (Fluid staggered height cards)</option>
+                  <option value="editorial">Editorial Magazine (Single immersive column)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1">Desktop Columns</label>
+                <select id="layout-cols-select" class="w-full px-3 py-2 border border-gray-300 rounded text-sm bg-white">
+                  <option value="2">2 Columns</option>
+                  <option value="3">3 Columns (Reference standard)</option>
+                  <option value="4">4 Columns</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-6 pt-2">
+              <label class="flex items-center gap-2 text-xs font-medium text-gray-700 cursor-pointer">
+                <input type="checkbox" id="layout-badges-check" class="h-4 w-4 rounded accent-black">
+                Show Hover Ribbon Badges
+              </label>
+              <label class="flex items-center gap-2 text-xs font-medium text-gray-700 cursor-pointer">
+                <input type="checkbox" id="layout-categories-check" class="h-4 w-4 rounded accent-black">
+                Show Categories / Tags
+              </label>
+              <label class="flex items-center gap-2 text-xs font-medium text-gray-700 cursor-pointer">
+                <input type="checkbox" id="layout-doodles-check" class="h-4 w-4 rounded accent-black">
+                Show Flanking Mascot Doodles
+              </label>
+            </div>
+
+            <div class="pt-4 border-t border-gray-200">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">Fine-Tune Individual Card Offsets & Tilts</h4>
+              <p class="text-[11px] text-gray-500 mb-3">Adjust individual project card X/Y offsets and rotation degrees for the scattered layout.</p>
+              <div id="layout-project-offsets-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+            </div>
+
+            <button type="submit" class="px-5 py-2 bg-[#2b2620] text-white text-xs font-medium rounded hover:opacity-90">
+              Apply Layout Settings
+            </button>
+          </form>
+        </div>
+
+        <!-- Tab 3: Start Screen & Dark Mode -->
+        <div id="tab-hero" class="admin-tab-content hidden space-y-5">
+          <form id="admin-hero-form" class="bg-white p-5 border border-[#e2ddd5] rounded space-y-4">
+            <h3 class="font-bold text-sm text-[#2b2620]">Start Screen Sequence & Dark Mode</h3>
+
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1">Light Mode Headline (Shown first)</label>
+              <input type="text" id="hero-headline-input" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:border-black outline-none" placeholder="im urja. welcome to my studio.">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1">Dark Mode Headline (Shown when lights switch off)</label>
+              <input type="text" id="hero-dark-headline-input" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:border-black outline-none" placeholder="i like to make things come alive.">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1">Click Prompt Tooltip</label>
+              <input type="text" id="hero-click-prompt-input" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:border-black outline-none" placeholder="click here">
+            </div>
+
+            <div class="space-y-2 pt-2 border-t border-gray-200">
+              <label class="flex items-center gap-2 text-xs font-medium text-gray-700 cursor-pointer">
+                <input type="checkbox" id="hero-clock-check" class="h-4 w-4 rounded accent-black">
+                Enable Live Digital Ticking Clock on Studio Shelf
+              </label>
+              <label class="flex items-center gap-2 text-xs font-medium text-gray-700 cursor-pointer">
+                <input type="checkbox" id="hero-steam-check" class="h-4 w-4 rounded accent-black">
+                Enable Steaming Coffee Mug Effect
+              </label>
+              <label class="flex items-center gap-2 text-xs font-medium text-gray-700 cursor-pointer">
+                <input type="checkbox" id="hero-creatures-check" class="h-4 w-4 rounded accent-black">
+                Enable Magical Night Creatures in Dark Mode
+              </label>
+            </div>
+
+            <button type="submit" class="px-5 py-2 bg-[#2b2620] text-white text-xs font-medium rounded hover:opacity-90">
+              Save Start Screen Settings
+            </button>
+          </form>
+        </div>
+
+        <!-- Tab 4: Profile & Bio -->
+        <div id="tab-profile" class="admin-tab-content hidden space-y-4">
+          <form id="admin-profile-form" class="space-y-4 bg-white p-5 border border-[#e2ddd5] rounded">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1">Your Name</label>
+              <input type="text" id="profile-name" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:border-black outline-none">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1">Polaroid Profile Image</label>
+              <div class="flex items-center gap-4">
+                <img id="profile-polaroid-preview" src="assets/about/bookworm.png" class="w-20 h-24 object-cover border border-gray-300 rounded shadow-sm bg-white">
+                <div class="space-y-2">
+                  <input type="file" id="profile-polaroid-file" accept="image/*" class="text-xs text-gray-600">
+                  <input type="hidden" id="profile-polaroid-hidden">
+                  <p class="text-[11px] text-gray-500">Upload your own photo to replace the polaroid on the About section.</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1">Bio Paragraphs (Separate with double linebreaks)</label>
+              <textarea id="profile-bio" rows="6" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:border-black outline-none leading-relaxed"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1">Closing Note</label>
+              <textarea id="profile-closing" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:border-black outline-none"></textarea>
+            </div>
+
+            <button type="submit" class="px-5 py-2 bg-[#2b2620] text-white text-xs font-medium rounded hover:opacity-90">
+              Save Profile Changes
+            </button>
+          </form>
+        </div>
+
+        <!-- Tab 5: Modular Contacts & Links -->
+        <div id="tab-contacts" class="admin-tab-content hidden space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-sm text-[#2b2620]">Manage Contact & Social Links</h3>
+              <p class="text-xs text-gray-500">Check/uncheck to hide, click remove to delete, or add any custom link.</p>
+            </div>
+            <button type="button" id="admin-add-contact-btn" class="px-4 py-1.5 bg-[#2b2620] text-white text-xs font-medium rounded hover:opacity-90">
+              + Add Custom Link
+            </button>
+          </div>
+
+          <div id="admin-contacts-list" class="space-y-2"></div>
+        </div>
+
+        <!-- Tab 6: Backup & Publish -->
+        <div id="tab-backup" class="admin-tab-content hidden space-y-6">
+          <div class="bg-white p-5 border border-[#e2ddd5] rounded space-y-4">
+            <h4 class="font-bold text-sm text-[#2b2620]">Backup & Data Portability</h4>
+            <p class="text-xs text-gray-600 leading-relaxed">
+              All your edits, uploaded projects, photos, and layouts are stored in your browser's IndexedDB. Download a complete JSON backup anytime to keep your work safe or transfer it to another computer.
+            </p>
+            <div class="flex flex-wrap gap-3">
+              <button type="button" id="admin-sync-disk-btn" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded flex items-center gap-2 shadow transition-transform active:scale-95">
+                <span>💾</span> 1-Click Save All Changes to Files (For GitHub)
+              </button>
+              <button type="button" id="admin-export-publish-btn" class="px-4 py-2 bg-[#2b2620] hover:bg-black text-white text-xs font-bold rounded flex items-center gap-2 shadow transition-transform active:scale-95">
+                <span>⬇</span> Download default-data.js File
+              </button>
+              <button type="button" id="admin-export-btn" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs rounded flex items-center gap-2 border border-gray-300">
+                <span>⬇</span> Download JSON Backup
+              </button>
+              <label class="px-4 py-2 border border-gray-300 text-xs rounded hover:bg-gray-50 flex items-center gap-2 cursor-pointer">
+                <span>⬆</span> Restore from JSON Backup
+                <input type="file" id="admin-import-file" accept=".json" class="hidden">
+              </label>
+            </div>
+          </div>
+
+          <div class="bg-red-50 p-5 border border-red-200 rounded space-y-2">
+            <h4 class="font-bold text-sm text-red-800">Reset Demo Data</h4>
+            <p class="text-xs text-red-700">
+              Reset website back to Urja Srivastava's original portfolio template.
+            </p>
+            <button type="button" id="admin-reset-btn" class="px-4 py-1.5 bg-red-600 text-white text-xs rounded hover:bg-red-700">
+              Reset to Original Template
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab: Typography, Fonts & Colors Customizer -->
+        <div id="tab-theme" class="admin-tab-content hidden space-y-6">
+
+          <!-- 1. Active Fonts Selection -->
+          <div class="bg-white p-5 border border-[#e2ddd5] rounded space-y-4">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+              <div>
+                <h3 class="font-bold text-sm text-[#2b2620]">🔤 Active Typography & Fonts</h3>
+                <p class="text-xs text-gray-500">Choose the font families for pixel stamps, body copy, and project titles</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <!-- Pixel Font -->
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1">
+                  Pixel / Accent Font
+                </label>
+                <select id="theme-font-pixel" class="w-full px-3 py-2 border border-gray-300 rounded text-sm bg-white focus:border-black outline-none">
+                  <!-- Populated dynamically -->
+                </select>
+                <p class="text-[11px] text-gray-500 mt-1">Used for cues, badges, stamps & buttons</p>
+              </div>
+
+              <!-- Body Font -->
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1">
+                  Body / Reading Font
+                </label>
+                <select id="theme-font-body" class="w-full px-3 py-2 border border-gray-300 rounded text-sm bg-white focus:border-black outline-none">
+                  <!-- Populated dynamically -->
+                </select>
+                <p class="text-[11px] text-gray-500 mt-1">Used for bio, paragraphs & stories</p>
+              </div>
+
+              <!-- Heading Font -->
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1">
+                  Headings / Title Font
+                </label>
+                <select id="theme-font-heading" class="w-full px-3 py-2 border border-gray-300 rounded text-sm bg-white focus:border-black outline-none">
+                  <!-- Populated dynamically -->
+                </select>
+                <p class="text-[11px] text-gray-500 mt-1">Used for project titles & hero</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Font Library Manager (Delete Unwanted Fonts & Add New Google Fonts) -->
+          <div class="bg-white p-5 border border-[#e2ddd5] rounded space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-100 pb-3">
+              <div>
+                <h3 class="font-bold text-sm text-[#2b2620]">📚 Font Library (Remove & Add Fonts)</h3>
+                <p class="text-xs text-gray-500">Delete fonts you don't want or add any Google Font by name</p>
+              </div>
+            </div>
+
+            <!-- Add New Font Input -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded">
+              <input type="text" id="theme-add-font-input" placeholder="Type Google Font name (e.g. Outfit, Cinzel, DM Sans, Epilogue, Caveat)" class="flex-1 px-3 py-2 border border-gray-300 rounded text-xs focus:border-black outline-none bg-white">
+              <button type="button" id="theme-add-font-btn" class="px-4 py-2 bg-[#2b2620] text-white text-xs font-medium rounded hover:opacity-90 shrink-0">
+                + Add Google Font
+              </button>
+            </div>
+            <div id="theme-font-add-msg" class="text-xs text-emerald-700 hidden"></div>
+
+            <!-- List of Installed Fonts with [Delete] button -->
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-2">Available Fonts in Library</label>
+              <div id="theme-fonts-list" class="divide-y divide-gray-100 border border-gray-200 rounded max-h-60 overflow-y-auto bg-white">
+                <!-- Dynamically populated with fonts and [✕ Delete] buttons -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Font Size Scale -->
+          <div class="bg-white p-5 border border-[#e2ddd5] rounded space-y-4">
+            <h3 class="font-bold text-sm text-[#2b2620]">📏 Typography Size Scale</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="text-xs font-semibold uppercase tracking-wider text-gray-700">Base Body Font Size</label>
+                  <span id="theme-fontsize-display" class="text-xs font-mono font-bold text-[#2b2620]">14px</span>
+                </div>
+                <input type="range" id="theme-fontsize-slider" min="12" max="22" step="1" value="14" class="w-full accent-black cursor-pointer">
+                <div class="flex justify-between text-[10px] text-gray-400 mt-1">
+                  <span>12px (Compact)</span>
+                  <span>14px (Default)</span>
+                  <span>18px</span>
+                  <span>22px (Large)</span>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="text-xs font-semibold uppercase tracking-wider text-gray-700">Headings Size Multiplier</label>
+                  <span id="theme-headingscale-display" class="text-xs font-mono font-bold text-[#2b2620]">1.0x</span>
+                </div>
+                <input type="range" id="theme-headingscale-slider" min="0.8" max="1.8" step="0.05" value="1.0" class="w-full accent-black cursor-pointer">
+                <div class="flex justify-between text-[10px] text-gray-400 mt-1">
+                  <span>0.8x (Subtle)</span>
+                  <span>1.0x (Default)</span>
+                  <span>1.4x</span>
+                  <span>1.8x (Bold Editorial)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Quick Palette Presets -->
+          <div class="bg-white p-5 border border-[#e2ddd5] rounded space-y-3">
+            <h3 class="font-bold text-sm text-[#2b2620]">🎨 One-Click Aesthetic Color Palettes</h3>
+            <p class="text-xs text-gray-500">Pick a curated studio color scheme or customize individual colors below:</p>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 pt-1">
+              <button type="button" class="theme-preset-btn p-2 border border-gray-300 rounded text-left hover:border-black transition-colors" data-preset="default">
+                <div class="flex gap-1 mb-1.5"><span class="w-3.5 h-3.5 rounded-full" style="background:#faf9f5; border:1px solid #ccc"></span><span class="w-3.5 h-3.5 rounded-full" style="background:#e7e1db"></span><span class="w-3.5 h-3.5 rounded-full" style="background:#2b2620"></span></div>
+                <span class="text-xs font-semibold block">Warm Studio</span>
+                <span class="text-[10px] text-gray-500">Default Cream</span>
+              </button>
+
+              <button type="button" class="theme-preset-btn p-2 border border-gray-300 rounded text-left hover:border-black transition-colors" data-preset="minimal">
+                <div class="flex gap-1 mb-1.5"><span class="w-3.5 h-3.5 rounded-full" style="background:#ffffff; border:1px solid #ccc"></span><span class="w-3.5 h-3.5 rounded-full" style="background:#f4f4f4"></span><span class="w-3.5 h-3.5 rounded-full" style="background:#111111"></span></div>
+                <span class="text-xs font-semibold block">Pure Minimal</span>
+                <span class="text-[10px] text-gray-500">Crisp Monochrome</span>
+              </button>
+
+              <button type="button" class="theme-preset-btn p-2 border border-gray-300 rounded text-left hover:border-black transition-colors" data-preset="editorial">
+                <div class="flex gap-1 mb-1.5"><span class="w-3.5 h-3.5 rounded-full" style="background:#f5efe6"></span><span class="w-3.5 h-3.5 rounded-full" style="background:#ebe3d5"></span><span class="w-3.5 h-3.5 rounded-full" style="background:#33251c"></span></div>
+                <span class="text-xs font-semibold block">Warm Editorial</span>
+                <span class="text-[10px] text-gray-500">Beige & Roast</span>
+              </button>
+
+              <button type="button" class="theme-preset-btn p-2 border border-gray-300 rounded text-left hover:border-black transition-colors" data-preset="sage">
+                <div class="flex gap-1 mb-1.5"><span class="w-3.5 h-3.5 rounded-full" style="background:#f0f4ef"></span><span class="w-3.5 h-3.5 rounded-full" style="background:#e3eae0"></span><span class="w-3.5 h-3.5 rounded-full" style="background:#26382b"></span></div>
+                <span class="text-xs font-semibold block">Pale Sage</span>
+                <span class="text-[10px] text-gray-500">Botanical Garden</span>
+              </button>
+
+              <button type="button" class="theme-preset-btn p-2 border border-gray-300 rounded text-left hover:border-black transition-colors" data-preset="lavender">
+                <div class="flex gap-1 mb-1.5"><span class="w-3.5 h-3.5 rounded-full" style="background:#f6f4fa"></span><span class="w-3.5 h-3.5 rounded-full" style="background:#ece6f2"></span><span class="w-3.5 h-3.5 rounded-full" style="background:#2c2033"></span></div>
+                <span class="text-xs font-semibold block">Soft Lavender</span>
+                <span class="text-[10px] text-gray-500">Pastel Lilac</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 5. Background Colors (Light & Dark) -->
+          <div class="bg-white p-5 border border-[#e2ddd5] rounded space-y-4">
+            <h3 class="font-bold text-sm text-[#2b2620]">🖼️ Background Colors</h3>
+            
+            <div class="space-y-3">
+              <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider">Day / Light Mode Backgrounds</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs font-medium text-gray-700 mb-1">Page Canvas / Body</label>
+                  <div class="flex items-center gap-2">
+                    <input type="color" id="theme-color-page-bg-light" class="w-8 h-8 rounded border border-gray-300 cursor-pointer p-0">
+                    <input type="text" id="theme-color-page-bg-light-text" class="w-24 px-2 py-1 text-xs border border-gray-300 rounded font-mono uppercase">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-medium text-gray-700 mb-1">Work Gallery & Case Studies</label>
+                  <div class="flex items-center gap-2">
+                    <input type="color" id="theme-color-bg-light" class="w-8 h-8 rounded border border-gray-300 cursor-pointer p-0">
+                    <input type="text" id="theme-color-bg-light-text" class="w-24 px-2 py-1 text-xs border border-gray-300 rounded font-mono uppercase">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-medium text-gray-700 mb-1">Hero Desk Section</label>
+                  <div class="flex items-center gap-2">
+                    <input type="color" id="theme-color-hero-bg-light" class="w-8 h-8 rounded border border-gray-300 cursor-pointer p-0">
+                    <input type="text" id="theme-color-hero-bg-light-text" class="w-24 px-2 py-1 text-xs border border-gray-300 rounded font-mono uppercase">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-gray-100 space-y-3">
+              <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider">Night / Dark Mode Backgrounds</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs font-medium text-gray-700 mb-1">Dark Page Canvas</label>
+                  <div class="flex items-center gap-2">
+                    <input type="color" id="theme-color-page-bg-dark" class="w-8 h-8 rounded border border-gray-300 cursor-pointer p-0">
+                    <input type="text" id="theme-color-page-bg-dark-text" class="w-24 px-2 py-1 text-xs border border-gray-300 rounded font-mono uppercase">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-medium text-gray-700 mb-1">Dark Work Gallery</label>
+                  <div class="flex items-center gap-2">
+                    <input type="color" id="theme-color-bg-dark" class="w-8 h-8 rounded border border-gray-300 cursor-pointer p-0">
+                    <input type="text" id="theme-color-bg-dark-text" class="w-24 px-2 py-1 text-xs border border-gray-300 rounded font-mono uppercase">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-medium text-gray-700 mb-1">Dark Hero Section</label>
+                  <div class="flex items-center gap-2">
+                    <input type="color" id="theme-color-hero-bg-dark" class="w-8 h-8 rounded border border-gray-300 cursor-pointer p-0">
+                    <input type="text" id="theme-color-hero-bg-dark-text" class="w-24 px-2 py-1 text-xs border border-gray-300 rounded font-mono uppercase">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. Font / Text Colors -->
+          <div class="bg-white p-5 border border-[#e2ddd5] rounded space-y-4">
+            <h3 class="font-bold text-sm text-[#2b2620]">🖋️ Font & Text Colors</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              <div>
+                <label class="block text-xs font-medium text-gray-700 mb-1">Light Mode Main Text</label>
+                <div class="flex items-center gap-2">
+                  <input type="color" id="theme-color-ink-light" class="w-8 h-8 rounded border border-gray-300 cursor-pointer p-0">
+                  <input type="text" id="theme-color-ink-light-text" class="w-24 px-2 py-1 text-xs border border-gray-300 rounded font-mono uppercase">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-gray-700 mb-1">Light Mode Subtitles/Muted</label>
+                <div class="flex items-center gap-2">
+                  <input type="color" id="theme-color-muted-light" class="w-8 h-8 rounded border border-gray-300 cursor-pointer p-0">
+                  <input type="text" id="theme-color-muted-light-text" class="w-24 px-2 py-1 text-xs border border-gray-300 rounded font-mono uppercase">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-gray-700 mb-1">Dark Mode Main Text</label>
+                <div class="flex items-center gap-2">
+                  <input type="color" id="theme-color-ink-dark" class="w-8 h-8 rounded border border-gray-300 cursor-pointer p-0">
+                  <input type="text" id="theme-color-ink-dark-text" class="w-24 px-2 py-1 text-xs border border-gray-300 rounded font-mono uppercase">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-gray-700 mb-1">Dark Mode Subtitles/Muted</label>
+                <div class="flex items-center gap-2">
+                  <input type="color" id="theme-color-muted-dark" class="w-8 h-8 rounded border border-gray-300 cursor-pointer p-0">
+                  <input type="text" id="theme-color-muted-dark-text" class="w-24 px-2 py-1 text-xs border border-gray-300 rounded font-mono uppercase">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-[#e2ddd5]">
+            <button type="button" id="theme-reset-btn" class="px-4 py-2 border border-gray-300 text-xs text-gray-700 rounded hover:bg-gray-100 flex items-center gap-1.5">
+              <span>↺</span> Reset to Defaults
+            </button>
+            <div class="flex items-center gap-3">
+              <span id="theme-save-indicator" class="text-xs text-emerald-700 font-medium hidden">✓ Changes saved!</span>
+              <button type="button" id="theme-save-btn" class="px-6 py-2 bg-[#2b2620] text-white font-medium text-xs rounded hover:opacity-90 flex items-center gap-2">
+                <span>💾</span> Save Fonts & Colors
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  <!-- Floating Text Edit & Deletion Mode Banner -->
+  <div id="text-edit-mode-banner" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#2b2620] text-white px-5 py-3 rounded-full shadow-2xl border border-white/20 flex items-center gap-3 font-pixel text-xs hidden transition-all duration-300">
+    <span>✂️</span>
+    <span><strong>Text Deletion Mode Active:</strong> Click any text to edit or delete</span>
+    <button type="button" onclick="window.studioApp.toggleTextEditMode()" class="ml-2 px-3 py-1 bg-white text-[#2b2620] font-bold rounded-full hover:bg-emerald-400 hover:text-black transition-colors">
+      ✓ Done & Save
+    </button>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/default-data.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/plant-game.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
